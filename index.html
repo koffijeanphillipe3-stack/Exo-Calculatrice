@@ -1,0 +1,83 @@
+html<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calculatrice Tailwind</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600&display=swap" rel="stylesheet">
+<style> body{font-family:'Space Grotesk', sans-serif} </style>
+</head>
+<body class="min-h-screen bg-[#0a0a0a] flex items-center justify-center p-4">
+
+<div class="w-full max-w-[360px] bg-zinc-900 rounded-[32px] p-6 shadow-2xl border border-zinc-800">
+
+  <!-- Historique -->
+  <div id="historique" class="h-20 text-right text-zinc -500 text-sm overflow-y-auto space-y-1 px-2 mb-2"></div>
+
+  <!-- Ecran -->
+  <input id="ecran" disabled placeholder="0"
+    class="w-full bg-transparent text-white text-5xl font-semibold text-right outline-none pb-6 tracking-tight">
+
+  <!-- Touches -->
+  <div class="grid grid-cols-4 gap-3">
+    <button onclick="effacer()" class="h-[68px] rounded-full bg-zinc-700 text-white text-xl hover:bg-zinc-600 active:scale-95 transition">AC</button>
+    <button onclick="supprimer()" class="h-[68px] rounded-full bg-zinc-700 text-white text-xl hover:bg-zinc-600 active:scale-95 transition">⌫</button>
+    <button onclick="ajouter('%')" class="h-[68px] rounded-full bg-zinc-700 text-white text-xl hover:bg-zinc-600 active:scale-95 transition">%</button>
+    <button onclick="ajouter('/')" class="h-[68px] rounded-full bg-orange-500 text-white text-2xl hover:bg-orange-400 active:scale-95 transition">÷</button>
+
+    <button onclick="ajouter('7')" class="h-[68px] rounded-full bg-zinc-800 text-white text-2xl hover:bg-zinc-700 active:scale-95 transition">7</button>
+    <button onclick="ajouter('8')" class="h-[68px] rounded-full bg-zinc-800 text-white text-2xl hover:bg-zinc-700 active:scale-95 transition">8</button>
+    <button onclick="ajouter('9')" class="h-[68px] rounded-full bg-zinc-800 text-white text-2xl hover:bg-zinc-700 active:scale-95 transition">9</button>
+    <button onclick="ajouter('*')" class="h-[68px] rounded-full bg-orange-500 text-white text-2xl hover:bg-orange-400 active:scale-95 transition">×</button>
+
+    <button onclick="ajouter('4')" class="h-[68px] rounded-full bg-zinc-800 text-white text-2xl hover:bg-zinc-700 active:scale-95 transition">4</button>
+    <button onclick="ajouter('5')" class="h-[68px] rounded-full bg-zinc-800 text-white text-2xl hover:bg-zinc-700 active:scale-95 transition">5</button>
+    <button onclick="ajouter('6')" class="h-[68px] rounded-full bg-zinc-800 text-white text-2xl hover:bg-zinc-700 active:scale-95 transition">6</button>
+    <button onclick="ajouter('-')" class="h-[68px] rounded-full bg-orange-500 text-white text-2xl hover:bg-orange-400 active:scale-95 transition">−</button>
+
+    <button onclick="ajouter('1')" class="h-[68px] rounded-full bg-zinc-800 text-white text-2xl hover:bg-zinc-700 active:scale-95 transition">1</button>
+    <button onclick="ajouter('2')" class="h-[68px] rounded-full bg-zinc-800 text-white text-2xl hover:bg-zinc-700 active:scale-95 transition">2</button>
+    <button onclick="ajouter('3')" class="h-[68px] rounded-full bg-zinc-800 text-white text-2xl hover:bg-zinc-700 active:scale-95 transition">3</button>
+    <button onclick="ajouter('+')" class="h-[68px] rounded-full bg-orange-500 text-white text-2xl hover:bg-orange-400 active:scale-95 transition">+</button>
+
+    <button onclick="ajouter('0')" class="col-span-2 h-[68px] rounded-full bg-zinc-800 text-white text-2xl text-left pl-8 hover:bg-zinc-700 active:scale-95 transition">0</button>
+    <button onclick="ajouter('.')" class="h-[68px] rounded-full bg-zinc-800 text-white text-2xl hover:bg-zinc-700 active:scale-95 transition">.</button>
+    <button onclick="calculer()" class="h-[68px] rounded-full bg-white text-black text-3xl font-bold hover:bg-zinc-200 active:scale-95 transition">=</button>
+  </div>
+</div>
+
+<script>
+const ecran = document.getElementById('ecran');
+const histDiv = document.getElementById('historique');
+let hist = [];
+
+function ajouter(v){ ecran.value += v; }
+function effacer(){ ecran.value = ""; }
+function supprimer(){ ecran.value = ecran.value.slice(0,-1); }
+
+function calculer(){
+  try{
+    let expr = ecran.value;
+    let res = eval(expr);
+    if(res === undefined) return;
+    hist.unshift(`${expr} = ${res}`);
+    if(hist.length > 4) hist.pop();
+    histDiv.innerHTML = hist.map(h =>
+      `<div onclick="ecran.value='${h.split('=')[1].trim()}'" class="cursor-pointer hover:text-white transition">${h}</div>`
+    ).join('');
+    ecran.value = res;
+  } catch{
+    ecran.value = "Erreur";
+  }
+}
+
+document.addEventListener('keydown', e => {
+  if(!isNaN(e.key) || ['+','-','*','/','%','.'].includes(e.key)) ajouter(e.key);
+  if(e.key === 'Enter') calculer();
+  if(e.key === 'Backspace') supprimer();
+  if(e.key === 'Escape') effacer();
+});
+</script>
+</body>
+</html>Pourquoi cette version est mieux :Tailwind CDN : pas besoin d'installer, ça marche direct sur GitHub PagesDesign sombre pro style iOS 17Bouton = en blanc pour ressortirHistorique cliquableAnimations active:scale-95Tu veux que je te fasse aussi une version avec mode clair/sombre?
